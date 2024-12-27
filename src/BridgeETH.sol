@@ -12,8 +12,22 @@ contract BridgeETH is Ownable {
 
     mapping(address => uint256) public pendingBalances;
 
-    constructor(address _tokenAddress) Ownable(msg.sender) {
-        tokenAddress = _tokenAddress;
+    constructor(IERC20 _tokenAddress) Ownable(msg.sender) {
+        require(address(_tokenAddress) != address(0), "Invalid address");
+        require(
+            isERC20(address(_tokenAddress)),
+            "Not a valid ERC-20 token address"
+        );
+        tokenAddress = address(_tokenAddress);
+    }
+
+    // Function to check if the address implements ERC-20
+    function isERC20(address _addr) internal view returns (bool) {
+        try IERC20(_addr).totalSupply() returns (uint256) {
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     function deposit(IERC20 _tokenAddress, uint256 _amount) public {

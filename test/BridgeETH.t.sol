@@ -13,7 +13,7 @@ contract BridgeEth is Test {
 
     function setUp() public {
         usdt = new USDT();
-        bridgeEth = new BridgeETH(address(usdt));
+        bridgeEth = new BridgeETH((usdt));
     }
 
     function testDeposit() public {
